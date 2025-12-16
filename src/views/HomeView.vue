@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import EmailCard from '../components/EmailCard.vue';
 import apiService from '../services/ApiService';
 
 const emails = ref([]);
@@ -24,7 +23,8 @@ const getAllEmails = () => {
   }
   apiService.getAllEmails(data).then(
     (res) => {
-      emails.value = res.data.hits.hits;
+      console.log(res);
+      emails.value = res.data.result.hits.hits;
     },
     (err) => {
       console.log(err);
@@ -59,7 +59,7 @@ const search = () => {
   }
   apiService.getAllEmails(data).then(
     (res) => {
-      emails.value = res.data.hits.hits;
+      emails.value = res.data.result.hits.hits;
     },
     (err) => {
       console.log(err);
@@ -71,84 +71,129 @@ const handleEvent = (value) => {
   selectedEmail.value = value;
 }
 
-const resetSelectedEmail = () => {
-  selectedEmail.value = null;
-}
 </script>
 <template>
   <!-- component -->
-  <div class="flex flex-row w-full bg-white dark:bg-slate-300 dark:text-white ">
-    <div
-      class="relative flex flex-col bg-clip-border bg-white text-gray-700 h-full w-1/3 max-w-[400px] p-0 shadow-xl shadow-blue-gray-900/5 dark:bg-gray-600 dark:text-white">
-      <!-- component -->
-
-      <div class="flex rounded-md bg-gray-800 px-2 w-auto m-4">
-        <button class="self-center flex p-1 cursor-pointer bg-gray-800"> <svg width="30px" height="30px"
-            viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-            <g id="SVGRepo_bgCarrier" stroke-width="0" />
-
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-
-            <g id="SVGRepo_iconCarrier">
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M11.567 9.8895C12.2495 8.90124 12.114 7.5637 11.247 6.7325C10.3679 5.88806 9.02339 5.75928 7.99998 6.4215C7.57983 6.69308 7.25013 7.0837 7.05298 7.5435C6.85867 7.99881 6.80774 8.50252 6.90698 8.9875C7.00665 9.47472 7.25054 9.92071 7.60698 10.2675C7.97021 10.6186 8.42786 10.8563 8.92398 10.9515C9.42353 11.049 9.94062 11.0001 10.413 10.8105C10.8798 10.6237 11.2812 10.3033 11.567 9.8895Z"
-                stroke="#450A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M12.433 17.8895C11.7504 16.9012 11.886 15.5637 12.753 14.7325C13.6321 13.8881 14.9766 13.7593 16 14.4215C16.4202 14.6931 16.7498 15.0837 16.947 15.5435C17.1413 15.9988 17.1922 16.5025 17.093 16.9875C16.9933 17.4747 16.7494 17.9207 16.393 18.2675C16.0298 18.6186 15.5721 18.8563 15.076 18.9515C14.5773 19.0481 14.0614 18.9988 13.59 18.8095C13.1222 18.6234 12.7197 18.3034 12.433 17.8895V17.8895Z"
-                stroke="#450A0A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-              <path
-                d="M12 7.75049C11.5858 7.75049 11.25 8.08627 11.25 8.50049C11.25 8.9147 11.5858 9.25049 12 9.25049V7.75049ZM19 9.25049C19.4142 9.25049 19.75 8.9147 19.75 8.50049C19.75 8.08627 19.4142 7.75049 19 7.75049V9.25049ZM6.857 9.25049C7.27121 9.25049 7.607 8.9147 7.607 8.50049C7.607 8.08627 7.27121 7.75049 6.857 7.75049V9.25049ZM5 7.75049C4.58579 7.75049 4.25 8.08627 4.25 8.50049C4.25 8.9147 4.58579 9.25049 5 9.25049V7.75049ZM12 17.2505C12.4142 17.2505 12.75 16.9147 12.75 16.5005C12.75 16.0863 12.4142 15.7505 12 15.7505V17.2505ZM5 15.7505C4.58579 15.7505 4.25 16.0863 4.25 16.5005C4.25 16.9147 4.58579 17.2505 5 17.2505V15.7505ZM17.143 15.7505C16.7288 15.7505 16.393 16.0863 16.393 16.5005C16.393 16.9147 16.7288 17.2505 17.143 17.2505V15.7505ZM19 17.2505C19.4142 17.2505 19.75 16.9147 19.75 16.5005C19.75 16.0863 19.4142 15.7505 19 15.7505V17.2505ZM12 9.25049H19V7.75049H12V9.25049ZM6.857 7.75049H5V9.25049H6.857V7.75049ZM12 15.7505H5V17.2505H12V15.7505ZM17.143 17.2505H19V15.7505H17.143V17.2505Z"
-                fill="#450A0A" />
-            </g>
-
-          </svg></button>
-
-        <input type="text" class=" bg-[#0d1829] flex bg-transparent px-2 mr-auto text-[#cccccc] outline-0"
-          v-model="searchTerm" placeholder="Search.." @keyup.enter="search()" />
-        <button type="submit" class="relative p-2 bg-gray-800 rounded-full">
-          <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-            <g id="SVGRepo_bgCarrier" stroke-width="0" />
-
-            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
-
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z"
-                stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </g>
-
+  <div class="w-full bg-white shadow-xl rounded-lg flex overflow-x-auto custom-scrollbar h-[100vh]">
+    <div class="w-64 px-4">
+      <div class="h-16 flex items-center">
+        <a href="#"
+          class="w-48 mx-auto bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-gray-100 py-2 rounded space-x-2 transition duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
           </svg>
-        </button>
+          <span>Compose</span>
+        </a>
       </div>
-
-      <div class="mb-1 p-0 mx-4 mt-4">
-        <h5
-          class="block antialiased tracking-normal font-sans text-xl font-semibold leading-snug text-gray-900 dark:text-stone-400 ">
-          Enron
-          Mail</h5>
+      <div class="px-2 pt-4 pb-8 border-r border-gray-300">
+        <ul class="space-y-2">
+          <li>
+            <a
+              class="bg-gray-500 bg-opacity-30 text-blue-600 flex items-center justify-between py-1.5 px-4 rounded cursor-pointer">
+              <span class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+                  </path>
+                </svg>
+                <span>Inbox</span>
+              </span>
+              <span class="bg-sky-500 text-gray-100 font-bold px-2 py-0.5 text-xs rounded-lg">3</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+                </path>
+              </svg>
+              <span>Starred</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span>Snoozed</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+              </svg>
+              <span>Important</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+              </svg>
+              <span>Sent</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center justify-between text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <span class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                  </path>
+                </svg>
+                <span>Drafts</span>
+              </span>
+              <span class="bg-sky-500 text-gray-100 font-bold px-2 py-0.5 text-xs rounded-lg">1</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                </path>
+              </svg>
+              <span>Spam</span>
+            </a>
+          </li>
+          <li>
+            <a
+              class="hover:bg-gray-500 hover:bg-opacity-10 hover:text-blue-600 flex items-center text-gray-700 py-1.5 px-4 rounded space-x-2 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                </path>
+              </svg>
+              <span>Trash</span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <nav class="flex flex-col gap-1 w-full p-2 font-sans text-base font-normal text-gray-700">
-        <EmailCard @see-details="handleEvent" v-for="(email, index) in emails" :email="email" class="w-full"
-          :key="index" />
-      </nav>
-      <div class="flex items-center justify-center space-x-4 my-3">
-        <button @click="onPageChange('prev')"
-          class="px-3 py-1 text-white bg-[#0d1829] rounded hover:bg-stone-400 hover:text-stone-950  disabled:opacity-50"
-          :disabled="currentPage <= 1">Anterior</button>
-        <span class="text-lg">{{ currentPage }}</span>
-        <button @click="onPageChange('next')"
-          class="px-3 py-1 text-white bg-[#0d1829] rounded hover:bg-stone-400 hover:text-stone-950 disabled:opacity-50">Siguiente</button>
-      </div>
-
     </div>
-
-    <div class="w-2/3  bg-white flex flex-col items-center dark:bg-gray-400">
-      <div class="h-16 flex items-center justify-between fixed top-0 z-50 ">
-        <div class="flex items-center" @click="resetSelectedEmail()">
-          <a href="#"
-            class="flex items-center text-gray-700 dark:border-black dark:text-black px-2 py-1 space-x-0.5 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100"
+    <div class="flex-1 px-2">
+      <div class="h-16 flex items-center justify-between">
+        <div class="flex items-center">
+          <a v-if="selectedEmail" v-on:click="selectedEmail = null;" href="#"
+            class="flex items-center text-gray-700 px-2 py-1 space-x-0.5 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100"
             title="Back">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"
@@ -158,10 +203,10 @@ const resetSelectedEmail = () => {
             <span class="text-sm font-bold">Back</span>
           </a>
           <div class="flex items-center">
-            <span class="bg-gray-300 h-6 w-[.5px] mx-3"></span>
-            <div class="flex items-center space-x-2 ">
+            <span v-if="selectedEmail" class="bg-gray-300 h-6 w-[.5px] mx-3"></span>
+            <div class="flex items-center space-x-2">
               <button title="Archive"
-                class="text-gray-700 px-2 py-1 border border-gray-300 dark:border-black dark:text-black rounded-lg shadow hover:bg-gray-200 transition duration-100">
+                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -170,7 +215,7 @@ const resetSelectedEmail = () => {
                 </svg>
               </button>
               <button title="Mark As Spam"
-                class="text-gray-700 px-2 py-1 border dark:border-black dark:text-black border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
+                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -179,7 +224,7 @@ const resetSelectedEmail = () => {
                 </svg>
               </button>
               <button title="Delete"
-                class="text-gray-700 px-2 py-1 border dark:border-black dark:text-black border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
+                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -191,7 +236,7 @@ const resetSelectedEmail = () => {
             <span class="bg-gray-300 h-6 w-[.5px] mx-3"></span>
             <div class="flex items-center space-x-2">
               <button title="Mark As Unread"
-                class="text-gray-700 px-2 py-1 dark:border-black dark:text-black border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
+                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -200,7 +245,7 @@ const resetSelectedEmail = () => {
                 </svg>
               </button>
               <button title="Add Star"
-                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg dark:border-black dark:text-black shadow hover:bg-gray-200 transition duration-100">
+                class="text-gray-700 px-2 py-1 border border-gray-300 rounded-lg shadow hover:bg-gray-200 transition duration-100">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                   stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -211,83 +256,249 @@ const resetSelectedEmail = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div class="h-[500px] m-auto dark:bg-gray-400" v-if="selectedEmail == null">
-        <img src="../assets/img/email.png" alt="" srcset="" class="">
-      </div>
-
-
-      <div v-if="selectedEmail != null"
-        class="flex flex-col z-100 p-5 w-full max-h-[500px]  overflow-x-hidden mb-auto mt-16 h-full dark:bg-gray-400">
-        <div class="mb-6">
-          <h4 class="text-lg text-gray-800 font-bold pb-2 mb-4 border-b-2 dark:border-red-950 ">{{
-            selectedEmail._source.subject }}</h4>
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <div
-                class='flex flex-none items-center justify-center w-10 h-10 rounded-full bg-neutral-500 dark:text-black text-white'>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                  <path
-                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 9.829 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664H14z" />
-                </svg>
-              </div>
-              <div class="flex flex-col ml-2">
-                <span class="text-xs text-gray-400 dark:text-black space-y-3">From: {{ selectedEmail._source.from
-                  }}</span>
-                <span class="text-xs text-gray-400 dark:text-black">To: {{ selectedEmail._source.to }}</span>
-              </div>
-            </div>
-            <span class="text-sm text-gray-500 dark:text-black">{{ selectedEmail._source.Date }}</span>
-          </div>
-          <div class="py-6 pl-2 text-gray-700">
-            <p class="mt-4">{{ selectedEmail._source.Body }}</p>
-          </div>
-          <div class="border-t-2 dark:border-red-950 flex space-x-4 py-4">
-            <div
-              class="w-70 flex items-center py-2.5 px-2 border-2 border-gray-300 dark:border-red-950 rounded-lg hover:bg-gray-200 ">
-              <div class="flex items-center">
-                <div class="w-10 flex items-center justify-center">
-
-                </div>
-                <div class="w-48 ml-2 flex flex-col">
-                  <a href="#" class="text-sm text-gray-700 font-bold truncate">{{
-            selectedEmail._source["X-FileName"] ? selectedEmail._source["X-FileName"] : 'No File' }}</a>
-                  <span class="text-gray-500 text-xs">1.5 MB</span>
-                </div>
-              </div>
-              <button class="w-6 flex items-center justify-center" title="Download">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 hover:text-gray-600 h-6 w-6" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-              </button>
-            </div>
-            <!--    <div
-              class="w-70 flex items-center py-2.5 px-2 border-2 border-gray-300 dark:border-red-950 rounded-lg hover:bg-gray-200">
-              <div class="flex items-center">
-                <div class="w-10 flex items-center justify-center">
-
-                </div>
-                <div class="w-48 ml-2 flex flex-col">
-                  <a href="#" class="text-sm text-gray-700 font-bold truncate">Contract Proposal.docx</a>
-                  <span class="text-gray-500 text-xs">3.1 MB</span>
-                </div>
-              </div>
-              <button class="w-6 flex items-center justify-center" title="Download">
-                <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 hover:text-gray-600 h-6 w-6" fill="none"
-                  viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-              </button>
-            </div> -->
+        <div class="px-2 flex items-center space-x-4">
+          <div class="flex items-center space-x-2">
+            <button class="bg-gray-200 text-gray-400 p-1.5 rounded-lg" title="Previous Email">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </button>
+            <button class="bg-gray-200 hover:bg-gray-300 text-gray-700 p-1.5 rounded-lg transition duration-150"
+              title="Nex Email">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"></path>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
+      <div class="mb-6" v-if="selectedEmail">
+        <h4 class="text-lg text-gray-800 font-bold pb-2 mb-4 border-b-2">
+          {{ selectedEmail._source.subject || 'No subject' }}
+        </h4>
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center">
+            <div
+              class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold border border-gray-500">
+              {{ selectedEmail._source.from ? selectedEmail._source.from.charAt(0).toUpperCase() : 'U' }}
+            </div>
+            <div class="flex flex-col ml-2">
+              <span class="text-sm font-semibold text-gray-800">{{ selectedEmail._source.from || 'Unknown' }}</span>
+              <span class="text-xs text-gray-400">To: {{ selectedEmail._source.to || 'No recipient' }}</span>
+              <span v-if="selectedEmail._source.Cc" class="text-xs text-gray-400">Cc: {{ selectedEmail._source.Cc
+                }}</span>
+            </div>
+          </div>
+          <span class="text-sm text-gray-500">{{ selectedEmail._source.Date || 'No date' }}</span>
+        </div>
+        <div class="py-6 pl-2 text-gray-700 bg-gray-50 rounded-lg">
+          <div class="whitespace-pre-wrap">{{ selectedEmail._source.Body || 'No content available' }}</div>
+        </div>
+        <div v-if="selectedEmail._source['Message-ID'] || selectedEmail._source['X-Folder']"
+          class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+          <h5 class="text-sm font-semibold text-gray-700 mb-2">Email Details</h5>
+          <div class="text-xs text-gray-600 space-y-1">
+            <div v-if="selectedEmail._source['Message-ID']">
+              <span class="font-medium">Message ID:</span> {{ selectedEmail._source['Message-ID'] }}
+            </div>
+            <div v-if="selectedEmail._source['X-Folder']">
+              <span class="font-medium">Folder:</span> {{ selectedEmail._source['X-Folder'] }}
+            </div>
+            <div v-if="selectedEmail._source['Content-Type']">
+              <span class="font-medium">Content Type:</span> {{ selectedEmail._source['Content-Type'] }}
+            </div>
+          </div>
+        </div>
+        <div class="border-t-2 flex space-x-4 py-4 mt-4" v-if="false">
+          <div class="w-70 flex items-center py-2.5 px-2 border-2 border-gray-300 rounded-lg hover:bg-gray-200">
+            <div class="flex items-center">
+              <div class="w-10 flex items-center justify-center">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 122.88 121.83">
+                  <path class="cls-1"
+                    d="M102.42,37H81.92a8.52,8.52,0,0,1-8.85-8.7V7.53H21a.58.58,0,0,0-.41.18.45.45,0,0,0-.18.42V113.71a.7.7,0,0,0,.18.41.51.51,0,0,0,.41.18h80.84c.18,0,.17-.09.26-.18s.34-.28.34-.41V37Zm7.47,79.08a5.77,5.77,0,0,1-5.76,5.76H18.66a5.77,5.77,0,0,1-5.76-5.76V5.76a5.7,5.7,0,0,1,1.69-4.07A5.77,5.77,0,0,1,18.66,0H76.9a4.22,4.22,0,0,1,2.46.82l29.75,30.12a2.57,2.57,0,0,1,.78,2.6v82.53ZM80,27.69,79.57,9.63,100.66,31l-18.14-.81A2.4,2.4,0,0,1,80,27.69Z">
+                  </path>
+                  <path class="cls-2"
+                    d="M6.71,46.28H116.17A6.73,6.73,0,0,1,122.88,53v45.1a6.73,6.73,0,0,1-6.71,6.71H6.71A6.73,6.73,0,0,1,0,98.09V53a6.73,6.73,0,0,1,6.71-6.71Z">
+                  </path>
+                  <path class="cls-3"
+                    d="M16.33,59.78h16.2c3.53,0,6.17.83,7.94,2.51s2.63,4.08,2.63,7.18a9.71,9.71,0,0,1-2.88,7.47c-1.91,1.8-4.84,2.69-8.77,2.69H26.1V91.3H16.33V59.78ZM26.1,73.25h2.4a6.22,6.22,0,0,0,4-1,3.17,3.17,0,0,0,1.14-2.51,3.51,3.51,0,0,0-1-2.52c-.66-.69-1.91-1-3.75-1H26.1v7ZM48.3,59.78H62.78a17.47,17.47,0,0,1,6.92,1.16,11.23,11.23,0,0,1,4.35,3.33,13.66,13.66,0,0,1,2.49,5,23.36,23.36,0,0,1,.78,6.11,21.16,21.16,0,0,1-1.15,7.84A13,13,0,0,1,73,87.93a10.38,10.38,0,0,1-4.39,2.51,22.39,22.39,0,0,1-5.81.86H48.3V59.78ZM58,66.91V84.13h2.4a10.16,10.16,0,0,0,4.36-.68,4.65,4.65,0,0,0,2-2.36,14.84,14.84,0,0,0,.73-5.48q0-5-1.63-6.85c-1.09-1.23-2.91-1.85-5.44-1.85Zm24.43-7.13h24.09v6.78H92.24v5.5h12.24v6.39H92.24V91.3H82.46V59.78Z">
+                  </path>
+                </svg>
+              </div>
+              <div class="w-48 ml-2 flex flex-col">
+                <a href="#" class="text-sm text-gray-700 font-bold truncate">Terms and Conditions.pdf</a>
+                <span class="text-gray-500 text-xs">1.5 MB</span>
+              </div>
+            </div>
+            <button class="w-6 flex items-center justify-center" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 hover:text-gray-600 h-6 w-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="w-70 flex items-center py-2.5 px-2 border-2 border-gray-300 rounded-lg hover:bg-gray-200">
+            <div class="flex items-center">
+              <div class="w-10 flex items-center justify-center">
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512" xml:space="preserve">
+                  <path class="st0"
+                    d="M490.17,19.2H140.9c-12.05,0-21.83,9.72-21.83,21.7l0,0v96.7l202.42,59.2L512,137.6V40.9	C512,28.91,502.23,19.2,490.17,19.2L490.17,19.2z">
+                  </path>
+                  <path class="st1" d="M512,137.6H119.07V256l202.42,35.52L512,256V137.6z"></path>
+                  <path class="st2" d="M119.07,256v118.4l190.51,23.68L512,374.4V256H119.07z"></path>
+                  <path class="st3"
+                    d="M140.9,492.8h349.28c12.05,0,21.83-9.72,21.83-21.7l0,0v-96.7H119.07v96.7	C119.07,483.09,128.84,492.8,140.9,492.8L140.9,492.8z">
+                  </path>
+                  <path class="st4"
+                    d="M263.94,113.92H119.07v296h144.87c12.04-0.04,21.79-9.73,21.83-21.7v-252.6	C285.73,123.65,275.98,113.96,263.94,113.92z">
+                  </path>
+                  <path class="st5"
+                    d="M252.04,125.76H119.07v296h132.97c12.04-0.04,21.79-9.73,21.83-21.7v-252.6	C273.82,135.49,264.07,125.8,252.04,125.76z">
+                  </path>
+                  <path class="st5"
+                    d="M252.04,125.76H119.07v272.32h132.97c12.04-0.04,21.79-9.73,21.83-21.7V147.46	C273.82,135.49,264.07,125.8,252.04,125.76z">
+                  </path>
+                  <path class="st5"
+                    d="M240.13,125.76H119.07v272.32h121.06c12.04-0.04,21.79-9.73,21.83-21.7V147.46	C261.91,135.49,252.17,125.8,240.13,125.76z">
+                  </path>
+                  <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="45.8183" y1="-1083.4916"
+                    x2="216.1361" y2="-788.5082" gradientTransform="matrix(1 0 0 1 0 1192)">
+                    <stop offset="0" style="stop-color:#2368C4"></stop>
+                    <stop offset="0.5" style="stop-color:#1A5DBE"></stop>
+                    <stop offset="1" style="stop-color:#1146AC"></stop>
+                  </linearGradient>
+                  <path class="st6"
+                    d="M21.83,125.76h218.3c12.05,0,21.83,9.72,21.83,21.7v217.08c0,11.99-9.77,21.7-21.83,21.7H21.83	C9.77,386.24,0,376.52,0,364.54V147.46C0,135.48,9.77,125.76,21.83,125.76z">
+                  </path>
+                  <path class="st7"
+                    d="M89.56,292.21c0.43,3.35,0.71,6.26,0.85,8.76h0.5c0.19-2.37,0.59-5.22,1.19-8.56c0.6-3.34,1.15-6.16,1.63-8.47	l22.96-98.49h29.68l23.81,97.01c1.38,6.03,2.37,12.15,2.96,18.3h0.39c0.44-5.97,1.27-11.9,2.48-17.76l18.99-97.6h27.02	l-33.36,141.13H157.1l-22.62-93.47c-0.65-2.69-1.4-6.2-2.23-10.53s-1.33-7.48-1.54-9.47h-0.39c-0.26,2.3-0.77,5.71-1.54,10.23	c-0.76,4.52-1.37,7.87-1.83,10.04l-21.27,93.17h-32.1L40.04,185.46h27.5l20.68,98.69C88.7,286.17,89.14,288.87,89.56,292.21z">
+                  </path>
+                </svg>
+              </div>
+              <div class="w-48 ml-2 flex flex-col">
+                <a href="#" class="text-sm text-gray-700 font-bold truncate">Contract Proposal.docx</a>
+                <span class="text-gray-500 text-xs">3.1 MB</span>
+              </div>
+            </div>
+            <button class="w-6 flex items-center justify-center" title="Download">
+              <svg xmlns="http://www.w3.org/2000/svg" class="text-gray-500 hover:text-gray-600 h-6 w-6" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="mt-8 flex items-center space-x-4">
+          <button
+            class="w-32 flex items-center justify-center space-x-2 py-1.5 text-gray-600 border border-gray-400 rounded-lg hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span>Reply</span>
+          </button>
+          <button
+            class="w-32 flex items-center justify-center space-x-2 py-1.5 text-gray-600 border border-gray-400 rounded-lg hover:bg-gray-200">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+            </svg>
+            <span>Forward</span>
+          </button>
+        </div>
+      </div>
 
+      <div class="mb-6" v-else>
+        <!-- Search Bar -->
+        <div class="mb-4 px-2">
+          <div class="relative">
+            <input v-model="searchTerm" @keyup.enter="search" type="text" placeholder="Search emails..."
+              class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-900 absolute left-3 top-3" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <button v-if="searchTerm" @click="searchTerm = ''; search();"
+              class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Email List -->
+        <div class="space-y-2 mb-4 px-2">
+          <div v-for="email in emails" :key="email._id" @click="handleEvent(email)"
+            class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 cursor-pointer transition duration-150">
+            <div class="flex items-start justify-between mb-2">
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                  {{ email._source.from ? email._source.from.charAt(0).toUpperCase() : 'U' }}
+                </div>
+                <div>
+                  <h5 class="font-semibold text-gray-800">{{ email._source.from || 'Unknown' }}</h5>
+                  <p class="text-xs text-gray-500">{{ email._source.to || 'No recipient' }}</p>
+                </div>
+              </div>
+              <span class="text-xs text-gray-500">{{ email._source.Date || 'No date' }}</span>
+            </div>
+            <h6 class="font-medium text-gray-900 mb-1">{{ email._source.subject || 'No subject' }}</h6>
+            <p class="text-sm text-gray-600 line-clamp-2">{{ email._source.Body || 'No content' }}</p>
+          </div>
+
+          <div v-if="emails.length === 0" class="text-center py-12">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-gray-300 mx-auto mb-4" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <p class="text-gray-500 text-lg">No emails found</p>
+          </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="flex items-center justify-between pt-4 px-2 border-t border-gray-300 pb-4">
+          <button @click="onPageChange('prev')" :disabled="currentPage === 1"
+            :class="currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            class="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg transition duration-150">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="black">
+              <path fill-rule="evenodd"
+                d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+            <span class="text-black">Previous</span>
+          </button>
+
+          <span class="text-sm text-gray-600 font-medium">
+            Page {{ currentPage }}
+          </span>
+
+          <button @click="onPageChange('next')" :disabled="emails.length < pageSize"
+            :class="emails.length < pageSize ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-200'"
+            class="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg transition duration-150">
+            <span class="text-black">Next</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="black">
+              <path fill-rule="evenodd"
+                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
     </div>
-
   </div>
 
 </template>
@@ -298,5 +509,52 @@ img {
   background: transparent;
   margin: auto;
   filter: grayscale(100%);
+}
+
+.st0 {
+  fill: #41A5EE;
+}
+
+.st1 {
+  fill: #2B7CD3;
+}
+
+.st2 {
+  fill: #185ABD;
+}
+
+.st3 {
+  fill: #103F91;
+}
+
+.st4 {
+  opacity: 0.1;
+  enable-background: new;
+}
+
+.st5 {
+  opacity: 0.2;
+  enable-background: new;
+}
+
+.st6 {
+  fill: url(#SVGID_1_);
+}
+
+.st7 {
+  fill: #FFFFFF;
+}
+
+.cls-1,
+.cls-2 {
+  fill-rule: evenodd;
+}
+
+.cls-2 {
+  fill: red;
+}
+
+.cls-3 {
+  fill: #fff;
 }
 </style>
